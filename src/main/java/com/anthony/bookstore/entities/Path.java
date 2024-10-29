@@ -1,38 +1,29 @@
-package com.anthony.bookstore.model.dao;
+package com.anthony.bookstore.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "path")
-public class Path {
-    
-    @Id
-    @GeneratedValue
-    @Column(length = 36)
-    private UUID id;
+public class Path extends BaseEntity{
 
     @Column(length = 100, nullable = false)
     private String path;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "updated_by")
     private User updatedBy;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getPath() {
         return path;
@@ -64,11 +55,5 @@ public class Path {
 
     public void setUpdatedBy(User updatedBy) {
         this.updatedBy = updatedBy;
-    }
-
-    @Override
-    public String toString() {
-        return "Path [id=" + id + ", path=" + path + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-                + ", updatedBy=" + updatedBy + "]";
     }
 }

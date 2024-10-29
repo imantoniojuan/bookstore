@@ -1,4 +1,4 @@
-package com.anthony.bookstore.utility;
+package com.anthony.bookstore.utilities;
 
 public class Utilities {
     public static boolean isNull(String str){

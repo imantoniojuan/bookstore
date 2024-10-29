@@ -1,18 +1,15 @@
-package com.anthony.bookstore.model.dao;
+package com.anthony.bookstore.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "book")
-public class Book {
+public class Book extends BaseEntity{
     
-    @Id
-    @GeneratedValue
-    @Column(length = 36)
-    private UUID id;
-
     @Column(length = 20, unique = true, nullable = false)
     private String isbn;
 
@@ -25,23 +22,17 @@ public class Book {
     @Column(length = 100)
     private String genre;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "updated_by")
     private User updatedBy;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getIsbn() {
         return isbn;
@@ -105,12 +96,5 @@ public class Book {
 
     public void setUpdatedBy(User updatedBy) {
         this.updatedBy = updatedBy;
-    }
-
-    @Override
-    public String toString() {
-        return "Book [id=" + id + ", isbn=" + isbn + ", title=" + title + ", year=" + year + ", price=" + price
-                + ", genre=" + genre + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", updatedBy="
-                + updatedBy + "]";
     }
 }
