@@ -5,7 +5,6 @@ import java.time.LocalDate;
 public class AuthorAddRequest {
 
     private String name;
-
     private LocalDate birthday;
 
     public String getName() {

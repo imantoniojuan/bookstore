@@ -62,6 +62,10 @@ public class AuthorService {
         return authorRepository.findById(id);
     }
 
+    public List<Author> findByIds(List<Long> ids){
+        return authorRepository.findByIds(ids);
+    }
+
     public Optional<Author> findByNameAndBirthday(String name, LocalDate birthday){
         return authorRepository.findByNameAndBirthday(name,birthday);
     }
