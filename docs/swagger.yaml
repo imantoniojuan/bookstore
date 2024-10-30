@@ -1,0 +1,510 @@
+openapi: 3.0.3
+info:
+  title: Bookstore APIs
+  description: |-
+    This is a POC of a bookstore Restful APIs
+  contact:
+    email: anthonyjohngarcia9@gmail.com
+  version: "0.1"
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: author
+    description: Author APIs
+  - name: book
+    description: Book APIs
+  - name: auth
+    description: Auth APIs
+paths:
+  /author/add:
+    post:
+      tags:
+        - author
+      summary: Create an author record
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Ben Kinsley2"
+                birthday:
+                  type: string
+                  example: "2000-03-01"
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AResponse'
+  /author/modify:
+    put:
+      tags:
+        - author
+      summary: Update an author record
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                name:
+                  type: string
+                  example: "Ben Kinsley2"
+                birthday:
+                  type: string
+                  example: "2000-03-01"
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AResponse'
+        
+        '400':
+          description: "Name and Birthday combination already exists."
+  /author/{id}:
+    get:
+      tags:
+        - author
+      summary: Get author by id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AResponse'
+    delete:
+      tags:
+        - author
+      summary: Delete author by id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+      security:
+        - bearerAuth: []
+        
+  /author/:
+    get:
+      tags:
+        - author
+      summary: Get list of authors
+      parameters:
+        - name: query
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AResponseWithPagination'
+
+  /book/add:
+    post:
+      tags:
+        - book
+      summary: Create a book record
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isbn:
+                  type: string
+                  example: "978-1-60309-502-0"
+                title:
+                  type: string
+                  example: "Animal Stories"
+                year:
+                  type: integer
+                  example: 2021
+                price:
+                  type: number
+                  format: float
+                  example: 19.99
+                genre:
+                  type: string
+                  example: "Graphic Novels"
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BResponse'
+  /book/modify:
+    put:
+      tags:
+        - book
+      summary: Update a book record
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  id:
+                    type: integer
+                    example: 2
+                  isbn:
+                    type: string
+                    example: "978-1-60309-502-0"
+                  title:
+                    type: string
+                    example: "Animal Stories"
+                  year:
+                    type: integer
+                    example: 2021
+                  price:
+                    type: number
+                    format: float
+                    example: 19.99
+                  genre:
+                    type: string
+                    example: "Graphic Novels"
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BResponse'
+        
+        '400':
+          description: "ISBN already exists for another book."
+  /book/{id}:
+    get:
+      tags:
+        - book
+      summary: Get book by id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BResponse'
+    delete:
+      tags:
+        - book
+      summary: Delete book by id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+      security:
+        - bearerAuth: []
+      
+  /book/:
+    get:
+      tags:
+        - book
+      summary: Get list of books
+      parameters:
+        - name: query
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BResponseWithPagination'
+
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRegisterResponse'
+  
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthLoginResponse'
+                
+components:
+  schemas:
+    AuthRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "test@email.com"
+        password:
+          type: string
+          example: "********"
+    AuthRegisterResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        email:
+          type: string
+          example: "test@email.com"
+        createdAt:
+          type: string
+          example: "2024-10-29T00:39:10.340668"
+    AuthLoginResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzM4N3J9.eyJzdWIiOiJ0ZXN0QGVtYqlsLmNvbSIsImlhdCI6MTczMDI5MDUxMiwiZXhwIjoxNzMwMjk0MTEyfQ.TJbHQ1aC5FzZIwj3yvsz5MnpEDSb4opqyrqoelzC2ZlkxaYA8fV_ytGHEPpf1cm8"
+        expiresIn:
+          type: integer
+          example: 3600000
+    ABook:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        isbn:
+          type: string
+          example: "978-1-60309-502-0"
+        title:
+          type: string
+          example: "Animal Stories"
+        year:
+          type: integer
+          example: 2021
+        price:
+          type: number
+          format: float
+          example: 19.99
+        genre:
+          type: string
+          example: "Graphic Novels"
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: "Ben Kinsley2"
+        birthday:
+          type: string
+          format: date
+          example: "2000-03-01"
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/ABook'
+    Pagination:
+      type: object
+      properties:
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 1
+        numOfItems:
+          type: integer
+          example: 1
+        totalPages:
+          type: integer
+          example: 1
+        totalItems:
+          type: integer
+          example: 1
+    AResponseWithPagination:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    AResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        isbn:
+          type: string
+          example: "978-1-60309-502-0"
+        title:
+          type: string
+          example: "Animal Stories"
+        year:
+          type: integer
+          example: 2021
+        price:
+          type: number
+          format: float
+          example: 19.99
+        genre:
+          type: string
+          example: "Graphic Novels"
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/BAuthor'
+    BAuthor:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: "Ben Kinsley2"
+        birthday:
+          type: string
+          format: date
+          example: "2000-03-01"
+    BResponseWithPagination:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    BResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes
