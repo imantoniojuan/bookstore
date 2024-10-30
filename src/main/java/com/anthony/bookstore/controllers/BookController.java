@@ -127,6 +127,7 @@ public class BookController extends BaseController{
         List<AuthorBook> authorBookList = authorBookService.findAllByBookId(id);
         if(authorBookList!=null && !authorBookList.isEmpty()){
             response.setId(authorBookList.get(0).getBook().getId());
+            response.setTitle(authorBookList.get(0).getBook().getTitle());
             response.setIsbn(authorBookList.get(0).getBook().getIsbn());
             response.setPrice(authorBookList.get(0).getBook().getPrice());
             response.setYear(authorBookList.get(0).getBook().getYear());

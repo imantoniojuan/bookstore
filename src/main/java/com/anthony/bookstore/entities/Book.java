@@ -1,5 +1,7 @@
 package com.anthony.bookstore.entities;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -22,6 +24,22 @@ public class Book extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "updated_by")
     private User updatedBy;
+
+    @Transient
+    private List<Long> authorIds;
+
+    public Book(){
+
+    }
+
+    public Book(Book book){
+        this.setId(book.getId());
+        this.isbn = book.getIsbn();
+        this.title = book.getTitle();
+        this.year = book.getYear();
+        this.price = book.getPrice();
+        this.genre = book.getGenre();
+    }
 
     public String getIsbn() {
         return isbn;
@@ -69,5 +87,19 @@ public class Book extends BaseEntity{
 
     public void setUpdatedBy(User updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public List<Long> getAuthorIds() {
+        return authorIds;
+    }
+
+    public void setAuthorIds(List<Long> authorIds) {
+        this.authorIds = authorIds;
+    }
+
+    @Override
+    public String toString() {
+        return "Book [id=" + this.getId() + ", isbn=" + isbn + ", title=" + title + ", year=" + year + ", price=" + price + ", genre=" + genre
+                + ", updatedBy=" + updatedBy + ", authorIds=" + authorIds + "]";
     }
 }

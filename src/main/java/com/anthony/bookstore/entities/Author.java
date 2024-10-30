@@ -15,6 +15,21 @@ public class Author extends BaseEntity {
     @JoinColumn(name = "updated_by")
     private User updatedBy;
 
+    public Author(){
+
+    }
+
+    public Author(String name, LocalDate birthday){
+        this.name = name;
+        this.birthday = birthday;
+    }
+
+    public Author(Author author){
+        this.setId(author.getId());
+        this.name = author.getName();
+        this.birthday = author.getBirthday();
+    }
+
     public String getName() {
         return name;
     }

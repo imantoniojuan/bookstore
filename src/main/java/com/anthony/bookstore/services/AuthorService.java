@@ -40,7 +40,7 @@ public class AuthorService {
             Author temp = authorOpt.get();
             temp.setName(author.getName());
             temp.setBirthday(author.getBirthday());
-            return authorRepository.save(author);
+            return authorRepository.save(temp);
         }
         else{
             return null;
