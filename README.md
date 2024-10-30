@@ -36,7 +36,7 @@ Here is what this application demonstrates:
 * Writing a RESTful service using annotation: supports JSON request / response;
 * *Spring Data* Integration with JPA/Hibernate with configuration and familiar annotations. 
 * Automatic CRUD functionality against the data source using Spring *Repository* pattern
-<!-- * Demonstrates MockMVC test framework with associated libraries -->
+* Demonstrates SpringBootTest test framework with associated libraries 
 
 
 Here is an overview of the application's APIs:
@@ -342,6 +342,13 @@ RESPONSE: HTTP 200
 Location header: http://localhost:8080/book/?query=animal&offset=0&limit=1
 ```
 
+## Running unit tests
+
+Unit tests can be run like so:
+
+```
+mvn test
+```
 
 ## Future implementations
 
