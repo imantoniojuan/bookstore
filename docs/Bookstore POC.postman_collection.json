@@ -1,0 +1,277 @@
+{
+	"info": {
+		"_postman_id": "8e268798-ead1-4b1c-93dc-ed07d1c1db2e",
+		"name": "Bookstore POC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39338721"
+	},
+	"item": [
+		{
+			"name": "localhost:8080/auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"test@email.com\",\n    \"password\":\"pword124!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/auth/register"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"test@email.com\",\n    \"password\":\"pword124!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/author/add",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"Ben Kinsley\",\n    \"birthday\": \"2000-03-01\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/author/add"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/book/add",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"isbn\":\"978-1-60309-502-0\",\n    \"title\": \"Animal Stories\",\n    \"price\": 19.99,\n    \"genre\": \"Graphic Novels\",\n    \"authorIds\": [1,2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/book/add"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/book/modify",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 2,\n    \"isbn\":\"978-1-60309-502-0\",\n    \"title\": \"Animal Stories\",\n    \"price\": 19.99,\n    \"genre\": \"Graphic Novels\",\n    \"authorIds\": [2],\n    \"year\": 2021\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/book/modify"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/author/modify",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 2,\n    \"name\":\"Ben Kinsley2\",\n    \"birthday\": \"2000-03-01\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/author/modify"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/author/modify Copy",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 5,\n    \"name\":\"Unit Tester 2\",\n    \"birthday\": \"2024-10-30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/author/modify"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/author/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8080/author/1"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/author/1",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsImlhdCI6MTczMDI3OTk2NywiZXhwIjoxNzMwMjgzNTY3fQ.qq5zC5xxpi1FMVMNIVPVs9pE_3liIH6WwxKgiXJ0xphyPmGdcAdG5xL3Gm1-tBet"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "localhost:8080/author/3"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/book/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8080/book/2"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/book/1",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsImlhdCI6MTczMDI4MDQxNSwiZXhwIjoxNzMwMjg0MDE1fQ.f6eACcjLeNxFBb9dGIbRbKsPxZGD8fLb_otsmR8CO5lc6HdlI2gClYwttYuASMBX"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "localhost:8080/book/3"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/author/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8080/author/"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/book/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8080/book/"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/author/?query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/author/?query=Kinsley&offset=0&limit=1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"author",
+						""
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "Kinsley"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/book/?query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/book/?query=animal&offset=0&limit=1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						""
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "animal"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
