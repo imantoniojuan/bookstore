@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anthony.bookstore.dtos.requests.BookAddRequest;
 import com.anthony.bookstore.dtos.requests.BookModifyRequest;
+import com.anthony.bookstore.dtos.responses.AuthorGet;
 import com.anthony.bookstore.dtos.responses.BookAddResponse;
 import com.anthony.bookstore.dtos.responses.BookDeleteByIdResponse;
 import com.anthony.bookstore.dtos.responses.BookGet;
@@ -51,7 +52,7 @@ public class BookController extends BaseController{
         BookAddResponse response = new BookAddResponse();
         prepare(response);
 
-        List<Author> authorList = authorService.findByIds(bookAddDto.getAuthorIds());
+        List<Author> authorList = authorService.findByIdIn(bookAddDto.getAuthorIds());
         if(authorList!=null && !authorList.isEmpty()){
             Book book = new Book();
             book.setIsbn(bookAddDto.getIsbn());
@@ -60,6 +61,13 @@ public class BookController extends BaseController{
             book.setYear(bookAddDto.getYear());
             book.setGenre(bookAddDto.getGenre());
             response = new BookAddResponse(bookService.add(book, authorList));
+
+            List<AuthorGet> authors = new ArrayList<>();
+            List<AuthorBook> authorBookList = authorBookService.findAllByBookId(book.getId());
+            for(AuthorBook authorBook:authorBookList){
+                authors.add(new AuthorGet(authorBook.getAuthor()));
+            } 
+            response.setAuthors(authors);
         }
         else{
             response.setErrorMessage("Invalid Author IDs.");
@@ -76,9 +84,10 @@ public class BookController extends BaseController{
         prepare(response);
 
 
-        List<Author> authorList = authorService.findByIds(bookModifyDto.getAuthorIds());
+        List<Author> authorList = authorService.findByIdIn(bookModifyDto.getAuthorIds());
         if(authorList!=null && !authorList.isEmpty()){
             Book book = new Book();
+            book.setId(bookModifyDto.getId());
             book.setIsbn(bookModifyDto.getIsbn());
             book.setTitle(bookModifyDto.getTitle());
             book.setPrice(bookModifyDto.getPrice());
@@ -89,8 +98,16 @@ public class BookController extends BaseController{
                 response.setErrorMessage("ISBN already exists for another book.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            else
+            else{
+                List<AuthorGet> authors = new ArrayList<>();
+                List<AuthorBook> authorBookList = authorBookService.findAllByBookId(book.getId());
+                for(AuthorBook authorBook:authorBookList){
+                    authors.add(new AuthorGet(authorBook.getAuthor()));
+                } 
                 response = new BookModifyResponse(book);
+                response.setAuthors(authors);
+            }
+                
 
         }
         else{
@@ -115,9 +132,9 @@ public class BookController extends BaseController{
             response.setYear(authorBookList.get(0).getBook().getYear());
             response.setGenre(authorBookList.get(0).getBook().getGenre());
             
-            List<String> authors = new ArrayList<>();
+            List<AuthorGet> authors = new ArrayList<>();
             for(AuthorBook authorBook:authorBookList){
-                authors.add(authorBook.getAuthor().getName());
+                authors.add(new AuthorGet(authorBook.getAuthor()));
             }
             response.setAuthors(authors);
         }
@@ -154,15 +171,15 @@ public class BookController extends BaseController{
             }
             List<BookGet> bookGetList = new ArrayList<>();
             for(Book book:bookList){
-                List<String> authors = new ArrayList<>();
+                List<AuthorGet> authors = new ArrayList<>();
                 List<AuthorBook> authorBookList = authorBookService.findAllByBookId(book.getId());
                 for(AuthorBook authorBook:authorBookList){
-                    authors.add(authorBook.getAuthor().getName());
+                    authors.add(new AuthorGet(authorBook.getAuthor()));
                 }
                 BookGet bookGet = new BookGet(book,authors);
                 bookGetList.add(bookGet);
             }
-            response.setBookGetList(bookGetList);;
+            response.setBooks(bookGetList);
         }
         else{
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

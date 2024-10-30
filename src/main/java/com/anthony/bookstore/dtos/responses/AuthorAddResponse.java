@@ -1,6 +1,7 @@
 package com.anthony.bookstore.dtos.responses;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.anthony.bookstore.entities.Author;
 
@@ -8,6 +9,7 @@ public class AuthorAddResponse extends ResponseStatus{
     private Long id;
     private String name;
     private LocalDate birthday;
+    private List<BookGet> books;
 
     public AuthorAddResponse() {
     }
@@ -40,6 +42,14 @@ public class AuthorAddResponse extends ResponseStatus{
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
+    }
+
+    public List<BookGet> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<BookGet> books) {
+        this.books = books;
     }
 }
 

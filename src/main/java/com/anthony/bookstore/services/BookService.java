@@ -28,13 +28,14 @@ public class BookService {
             return bookOpt.get();
         }
         else{
+            book = bookRepository.save(book);
             for(Author author:authorList){
                 AuthorBook authorBook = new AuthorBook();
                 authorBook.setBook(book);
                 authorBook.setAuthor(author);
                 authorBookRepository.save(authorBook);
             }
-            return bookRepository.save(book);
+            return book;
         }
         
     }
@@ -46,14 +47,22 @@ public class BookService {
             if(bookOpt2.isPresent() && (bookOpt.get().getId()!=bookOpt.get().getId())){
                 return null;
             }
-            authorBookRepository.deleteAllByBookId(book.getId());
+            Book temp = bookOpt.get();
+            temp.setIsbn(book.getIsbn());
+            temp.setTitle(book.getTitle());
+            temp.setPrice(book.getPrice());
+            temp.setYear(book.getYear());
+            temp.setGenre(book.getGenre());
+            book = bookRepository.save(temp);
+            List<AuthorBook> authorBookList = authorBookRepository.findAllByBookId(book.getId());
+            authorBookRepository.deleteAll(authorBookList);
             for(Author author:authorList){
                 AuthorBook authorBook = new AuthorBook();
                 authorBook.setBook(book);
                 authorBook.setAuthor(author);
                 authorBookRepository.save(authorBook);
             }
-            return bookRepository.save(book);
+            return book;
         }
         else{
            return null;
@@ -63,6 +72,8 @@ public class BookService {
     public Long delete(Book book){
         Optional<Book> bookOpt = bookRepository.findById(book.getId());
         if(bookOpt.isPresent()){
+            List<AuthorBook> authorBookList = authorBookRepository.findAllByBookId(bookOpt.get().getId());
+            authorBookRepository.deleteAll(authorBookList);
             bookRepository.delete(bookOpt.get());
             return book.getId();
         }

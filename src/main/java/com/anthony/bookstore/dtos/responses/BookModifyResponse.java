@@ -1,5 +1,7 @@
 package com.anthony.bookstore.dtos.responses;
 
+import java.util.List;
+
 import com.anthony.bookstore.entities.Book;
 
 public class BookModifyResponse extends ResponseStatus{
@@ -9,6 +11,7 @@ public class BookModifyResponse extends ResponseStatus{
     private Integer year;
     private Float price;
     private String genre;
+    private List<AuthorGet> authors;
 
     public BookModifyResponse() {
     }
@@ -59,5 +62,12 @@ public class BookModifyResponse extends ResponseStatus{
     public void setGenre(String genre) {
         this.genre = genre;
     }
+    public List<AuthorGet> getAuthors() {
+        return authors;
+    }
+    public void setAuthors(List<AuthorGet> authors) {
+        this.authors = authors;
+    }
+    
 }
 

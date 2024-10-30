@@ -4,19 +4,29 @@ import java.util.List;
 
 import com.anthony.bookstore.entities.Book;
 
-public class BookGet extends ResponseStatus{
+public class BookGet{
     private Long id;
     private String isbn;
     private String title;
     private Integer year;
     private Float price;
     private String genre;
-    private List<String> authors;
+    private List<AuthorGet> authors;
 
     public BookGet() {
     }
 
-    public BookGet(Book book, List<String> authors){
+    public BookGet(Book book) {
+        this.id = book.getId();
+        this.isbn = book.getIsbn();
+        this.title = book.getTitle();
+        this.year = book.getYear();
+        this.price = book.getPrice();
+        this.genre = book.getGenre();
+    }
+
+
+    public BookGet(Book book, List<AuthorGet> authors){
         this.id = book.getId();
         this.isbn = book.getIsbn();
         this.title = book.getTitle();
@@ -63,11 +73,11 @@ public class BookGet extends ResponseStatus{
     public void setGenre(String genre) {
         this.genre = genre;
     }
-    public List<String> getAuthors() {
+    public List<AuthorGet> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<String> authors) {
+    public void setAuthors(List<AuthorGet> authors) {
         this.authors = authors;
     }
 }

@@ -9,7 +9,7 @@ import com.anthony.bookstore.entities.AuthorBook;
 
 @Repository
 public interface AuthorBookRepository extends CrudRepository<AuthorBook, Long> {
-    void deleteAllByBookId(Long id);
+    void deleteByBookId(Long id);
     List<AuthorBook> findAllByBookId(Long id);
     List<AuthorBook> findAllByAuthorId(Long id);
 }

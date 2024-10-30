@@ -6,25 +6,25 @@ import java.util.List;
 import com.anthony.bookstore.entities.Author;
 
 public class AuthorGetResponse extends ResponseStatus{
-    private List<AuthorGet> authorGetList;
+    private List<AuthorGet> authors;
     private Pagination pagination = null;
 
     public AuthorGetResponse(){
-        authorGetList = new ArrayList<AuthorGet>();
+        authors = new ArrayList<AuthorGet>();
     }
 
-    public List<AuthorGet> getAuthorGetList() {
-        return authorGetList;
+    public List<AuthorGet> getAuthors() {
+        return authors;
     }
 
-    public void setAuthorGetList(List<AuthorGet> authorGetList) {
-        this.authorGetList = authorGetList;
+    public void setAuthors(List<AuthorGet> authors) {
+        this.authors = authors;
     }
 
-    public void setAuthorGetListWithAuthorList(List<Author> authorList){
-        authorGetList = new ArrayList<AuthorGet>();
+    public void setAuthorsWithAuthorList(List<Author> authorList){
+        authors = new ArrayList<AuthorGet>();
         for(Author author:authorList){
-            authorGetList.add(new AuthorGet(author));
+            authors.add(new AuthorGet(author));
         }
     }
 

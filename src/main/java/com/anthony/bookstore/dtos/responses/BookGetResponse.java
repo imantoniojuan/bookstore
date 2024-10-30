@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookGetResponse extends ResponseStatus{
-    private List<BookGet> bookGetList;
+    private List<BookGet> books;
     private Pagination pagination = null;
 
     public BookGetResponse(){
-        bookGetList = new ArrayList<BookGet>();
+        books = new ArrayList<BookGet>();
     }
 
-    public List<BookGet> getBookGetList() {
-        return bookGetList;
+    public List<BookGet> getBooks() {
+        return books;
     }
 
-    public void setBookGetList(List<BookGet> bookGetList) {
-        this.bookGetList = bookGetList;
+    public void setBooks(List<BookGet> books) {
+        this.books = books;
     }
 
     public Pagination getPagination() {

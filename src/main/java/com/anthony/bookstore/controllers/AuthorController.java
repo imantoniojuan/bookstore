@@ -21,11 +21,15 @@ import com.anthony.bookstore.dtos.requests.AuthorAddRequest;
 import com.anthony.bookstore.dtos.requests.AuthorModifyRequest;
 import com.anthony.bookstore.dtos.responses.AuthorAddResponse;
 import com.anthony.bookstore.dtos.responses.AuthorDeleteByIdResponse;
+import com.anthony.bookstore.dtos.responses.AuthorGet;
 import com.anthony.bookstore.dtos.responses.AuthorGetByIdResponse;
 import com.anthony.bookstore.dtos.responses.AuthorGetResponse;
 import com.anthony.bookstore.dtos.responses.AuthorModifyResponse;
+import com.anthony.bookstore.dtos.responses.BookGet;
 import com.anthony.bookstore.dtos.responses.Pagination;
 import com.anthony.bookstore.entities.Author;
+import com.anthony.bookstore.entities.AuthorBook;
+import com.anthony.bookstore.services.AuthorBookService;
 import com.anthony.bookstore.services.AuthorService;
 
 @RequestMapping("/author")
@@ -34,6 +38,10 @@ public class AuthorController extends BaseController{
 
     @Autowired
     private AuthorService authorService;
+
+    @Autowired
+    private AuthorBookService authorBookService;
+
 
     @PostMapping("/add")
     public ResponseEntity<AuthorAddResponse> add(@RequestBody AuthorAddRequest authorAddDto) {
@@ -46,6 +54,14 @@ public class AuthorController extends BaseController{
         author.setBirthday(authorAddDto.getBirthday());
 
         response = new AuthorAddResponse(authorService.add(author));
+
+        List<BookGet> books = new ArrayList<>();
+        List<AuthorBook> authorBookList = authorBookService.findAllByAuthorId(response.getId());
+        for(AuthorBook authorBook:authorBookList){
+            books.add(new BookGet(authorBook.getBook()));
+        }
+
+        response.setBooks(books);
 
         conclude(response);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -66,8 +82,16 @@ public class AuthorController extends BaseController{
             response.setErrorMessage("Name and Birthday combination already exists.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        else
+        else{
             response = new AuthorModifyResponse(author);
+            List<BookGet> books = new ArrayList<>();
+            List<AuthorBook> authorBookList = authorBookService.findAllByAuthorId(response.getId());
+            for(AuthorBook authorBook:authorBookList){
+                books.add(new BookGet(authorBook.getBook()));
+            }
+
+            response.setBooks(books);
+        }
 
         conclude(response);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -81,6 +105,13 @@ public class AuthorController extends BaseController{
         Optional<Author> authorOpt = authorService.findById(id);
         if(authorOpt.isPresent()){
             response = new AuthorGetByIdResponse(authorOpt.get());
+            List<BookGet> books = new ArrayList<>();
+            List<AuthorBook> authorBookList = authorBookService.findAllByAuthorId(response.getId());
+            for(AuthorBook authorBook:authorBookList){
+                books.add(new BookGet(authorBook.getBook()));
+            }
+
+            response.setBooks(books);
         }
         else{
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -114,7 +145,18 @@ public class AuthorController extends BaseController{
                 response.setPagination(pagination);
                 authorList = temp;
             }
-            response.setAuthorGetListWithAuthorList(authorList);
+
+            List<AuthorGet> authorGetList = new ArrayList<>();
+            for(Author author:authorList){
+                List<BookGet> books = new ArrayList<>();
+                List<AuthorBook> authorBookList = authorBookService.findAllByAuthorId(author.getId());
+                for(AuthorBook authorBook:authorBookList){
+                    books.add(new BookGet(authorBook.getBook()));
+                }
+                AuthorGet authorGet = new AuthorGet(author,books);
+                authorGetList.add(authorGet);
+            }
+            response.setAuthors(authorGetList);
         }
         else{
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -131,6 +173,12 @@ public class AuthorController extends BaseController{
 
         Author author = new Author();
         author.setId(id);
+        List<AuthorBook> authorBook = authorBookService.findAllByAuthorId(id);
+        if(authorBook!=null && !authorBook.isEmpty()){
+            response.setErrorMessage("Author has books, delete books first.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         id = authorService.delete(author);
 
         if(id == null){

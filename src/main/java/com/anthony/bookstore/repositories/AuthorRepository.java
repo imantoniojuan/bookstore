@@ -14,5 +14,5 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
 
     Optional<Author> findByNameAndBirthday(String name, LocalDate birthday);
     List<Author> findByNameContaining(String query);
-    List<Author> findByIds(List<Long> ids);
+    List<Author> findByIdIn(List<Long> ids);
 }

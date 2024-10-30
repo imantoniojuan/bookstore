@@ -11,12 +11,12 @@ public class BookGetByIdResponse extends ResponseStatus{
     private Integer year;
     private Float price;
     private String genre;
-    private List<String> authors;
+    private List<AuthorGet> authors;
 
     public BookGetByIdResponse() {
     }
 
-    public BookGetByIdResponse(Book book, List<String> authors){
+    public BookGetByIdResponse(Book book, List<AuthorGet> authors){
         this.id = book.getId();
         this.isbn = book.getIsbn();
         this.title = book.getTitle();
@@ -63,11 +63,11 @@ public class BookGetByIdResponse extends ResponseStatus{
     public void setGenre(String genre) {
         this.genre = genre;
     }
-    public List<String> getAuthors() {
+    public List<AuthorGet> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<String> authors) {
+    public void setAuthors(List<AuthorGet> authors) {
         this.authors = authors;
     }
 }
