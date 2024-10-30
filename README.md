@@ -39,9 +39,16 @@ Here is what this application demonstrates:
 <!-- * Demonstrates MockMVC test framework with associated libraries -->
 
 
+Here is an overview of the application's APIs:
+
+* All APIs except DELETE methods are allowed without authentication
+* Anyone can register for now then subsequently login and use their token to call DELETE methods
+* An author record cannot be deleted if it has a book record(s) attached to it, either delete the book record first or modify to remove the author
+* When creating a book record, at least 1 author is required
+* An author can be created without any dependencies
+
+
 Here are some endpoints available:
-
-
 
 ### Auth APIs
 
