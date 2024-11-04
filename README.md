@@ -6,7 +6,15 @@ For building and running the application you need:
 
 - [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven 3](https://maven.apache.org)
-- [MySQL 8.0](https://dev.mysql.com/downloads/mysql/8.0.html)
+- [MySQL 8.0](https://dev.mysql.com/downloads/mysql/8.0.html) or [Docker](https://www.docker.com/products/docker-desktop/) with [MySQL 8.0 Container](https://hub.docker.com/_/mysql/tags)
+
+## Database
+
+Inital step would be to start up a database, for simplicity, I have used docker to create a MySQL instance running locally
+
+```
+docker run --name mysql-local -e MYSQL_ROOT_PASSWORD=jEaj6knQh9WM8m0 -e MYSQL_USER=developer -e MYSQL_PASSWORD=yer1S6W3FiEURol -e MYSQL_DATABASE=bookstore -p 3306:3306 -d mysql:8.0.40
+```
 
 ## Running the application locally
 

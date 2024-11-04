@@ -2,7 +2,8 @@ package com.anthony.bookstore;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
@@ -22,6 +23,9 @@ import org.springframework.web.client.RestTemplate;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.anthony.bookstore.dtos.requests.RegisterRequest;
+import com.anthony.bookstore.dtos.responses.RegisterResponse;
+import com.anthony.bookstore.entities.Author;
 import com.anthony.bookstore.entities.Book;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,12 +37,37 @@ public class BookControllerTests {
 
     Book createdBook;
 
-    List<Long> authorIds = Collections.singletonList(2L);
+    List<Long> authorIds;
+    Author createdAuthor;
+    String testEmail = "test@email.com";
+    String testPwd = "pword124!";
 
     @BeforeAll
     public void setUp() throws URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
-        URI uri = new URI("http://localhost:" + serverPort + "/book/add");
+        URI uri = new URI("http://localhost:" + serverPort + "/auth/register");
+
+        RegisterRequest rr = new RegisterRequest();
+        rr.setEmail(testEmail);
+        rr.setPassword(testPwd);
+        HttpEntity<RegisterRequest> registrationRequest = new HttpEntity<>(rr);
+        ResponseEntity<RegisterResponse> response = restTemplate.exchange(uri, HttpMethod.POST, registrationRequest, RegisterResponse.class);
+        RegisterResponse rrsp = response.getBody();
+
+        Assertions.assertNotNull(rrsp);
+
+        uri = new URI("http://localhost:" + serverPort + "/author/add");
+
+        Author author = new Author("Unit Tester", LocalDate.now());
+        HttpEntity<Author> request = new HttpEntity<>(author);
+        ResponseEntity<Author> authorresponse = restTemplate.exchange(uri, HttpMethod.POST, request, Author.class);
+
+        createdAuthor = authorresponse.getBody();
+
+        authorIds = new ArrayList<Long>();
+        authorIds.add(createdAuthor.getId());
+
+        uri = new URI("http://localhost:" + serverPort + "/book/add");
 
         Book book = new Book();
         book.setIsbn("999-1-00000-222-1");
@@ -48,10 +77,10 @@ public class BookControllerTests {
         book.setYear(2020);
         book.setAuthorIds(authorIds);
 
-        HttpEntity<Book> request = new HttpEntity<>(book);
-        ResponseEntity<Book> response = restTemplate.exchange(uri, HttpMethod.POST, request, Book.class);
+        HttpEntity<Book> bookRequest = new HttpEntity<>(book);
+        ResponseEntity<Book> bookResponse = restTemplate.exchange(uri, HttpMethod.POST, bookRequest, Book.class);
 
-        createdBook = response.getBody();
+        createdBook = bookResponse.getBody();
 
         Assertions.assertNotNull(createdBook);
         Assertions.assertNotNull(createdBook.getId());
@@ -93,7 +122,7 @@ public class BookControllerTests {
     @AfterAll
     public void tearDown() throws URISyntaxException, JSONException {
         RestTemplate restTemplate = new RestTemplate();
-        // Step 1: Login to obtain token
+        // Login to obtain token
         URI loginUri = new URI("http://localhost:" + serverPort + "/auth/login");
 
         // Set headers for login request
@@ -103,10 +132,10 @@ public class BookControllerTests {
         // Set login request body
         String loginRequestBody = """
             {
-                "email": "test@email.com",
-                "password": "pword124!"
+                "email": "%s",
+                "password": "%s"
             }
-            """;
+            """.formatted(testEmail, testPwd);
 
         HttpEntity<String> loginRequest = new HttpEntity<>(loginRequestBody, loginHeaders);
         ResponseEntity<String> loginResponse = restTemplate.exchange(loginUri, HttpMethod.POST, loginRequest, String.class);
@@ -120,7 +149,7 @@ public class BookControllerTests {
         String token = loginJson.getString("token");
         Assertions.assertNotNull(token);
 
-        // Step 2: Use the token to make an authorized DELETE request
+        // Use the token to make an authorized DELETE request
         URI deleteUri = new URI("http://localhost:" + serverPort + "/book/" + createdBook.getId());
 
         // Set headers for DELETE request, including Bearer token
@@ -132,5 +161,15 @@ public class BookControllerTests {
 
         // Verify delete response
         Assertions.assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+
+        // Use the token to make an authorized DELETE request
+        deleteUri = new URI("http://localhost:" + serverPort + "/author/" + createdAuthor.getId());
+
+        deleteRequest = new HttpEntity<>(deleteHeaders);
+        deleteResponse = restTemplate.exchange(deleteUri, HttpMethod.DELETE, deleteRequest, String.class);
+
+        // Verify delete response
+        Assertions.assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+
     }
 }
