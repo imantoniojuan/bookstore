@@ -190,6 +190,63 @@ public class BookController extends BaseController{
 		return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<BookGetResponse> getByTitleAndAuthor(@RequestParam(required=false) String title, @RequestParam(required=false) String author, @RequestParam(required=false) Integer offset, @RequestParam(required=false) Integer limit) {
+        BookGetResponse response = new BookGetResponse();
+        prepare(response);
+
+        List<Book> bookList = new ArrayList<Book>();
+        
+        if(title!=null && !title.isEmpty())
+            bookList = bookService.getByTitle(title);
+        else if(author!=null && !author.isEmpty()){
+            List<Author> authorList = authorService.getAll(author);
+            List<AuthorBook> authorBooks = new ArrayList<AuthorBook>();
+            for(Author a:authorList){
+                authorBooks.addAll(authorBookService.findAllByAuthorId(a.getId()));
+            }
+            for(AuthorBook ab:authorBooks){
+                bookList.add(ab.getBook());
+            }
+        }
+        
+        if(bookList != null){
+            if(offset!=null && limit!=null){
+                Pagination pagination = new Pagination();
+                List<Book> temp = new ArrayList<Book>();
+
+                pagination.setTotalItems(bookList.size());
+                pagination.setTotalPages((bookList.size() + limit -1) / limit);
+                pagination.setLimit(limit);
+                pagination.setOffset(offset);
+
+                for (int i = limit*offset; i < (limit*(offset+1)) && i < bookList.size(); i++) {
+                    temp.add(bookList.get(i));
+                }
+                pagination.setNumOfItems(temp.size());
+                response.setPagination(pagination);
+                bookList = temp;
+            }
+            List<BookGet> bookGetList = new ArrayList<>();
+            for(Book book:bookList){
+                List<AuthorGet> authors = new ArrayList<>();
+                List<AuthorBook> authorBookList = authorBookService.findAllByBookId(book.getId());
+                for(AuthorBook authorBook:authorBookList){
+                    authors.add(new AuthorGet(authorBook.getAuthor()));
+                }
+                BookGet bookGet = new BookGet(book,authors);
+                bookGetList.add(bookGet);
+            }
+            response.setBooks(bookGetList);
+        }
+        else{
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        conclude(response);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<BookDeleteByIdResponse> deleteById(@PathVariable Long id) {
         BookDeleteByIdResponse response = new BookDeleteByIdResponse();

@@ -114,4 +114,15 @@ public class BookService {
         }
         return books;
     }
+
+    public List<Book> getByTitle(String query) {
+        List<Book> books = new ArrayList<>();
+        if(query!=null){
+            books.addAll(bookRepository.findByTitleContaining(query));
+        }
+        else{
+            bookRepository.findAll().forEach(books::add);
+        }
+        return books;
+    }
 }
