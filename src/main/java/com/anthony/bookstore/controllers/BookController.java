@@ -2,6 +2,8 @@ package com.anthony.bookstore.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -196,20 +198,36 @@ public class BookController extends BaseController{
         prepare(response);
 
         List<Book> bookList = new ArrayList<Book>();
+
+        List<Book> tempBookList = new ArrayList<Book>();
+        List<Book> tempBookAuthorList = new ArrayList<Book>();
         
-        if(title!=null && !title.isEmpty())
-            bookList = bookService.getByTitle(title);
-        else if(author!=null && !author.isEmpty()){
+        if(title!=null && !title.isEmpty()){
+            tempBookList = bookService.getByTitle(title);
+            bookList = tempBookList;
+        }
+        if(author!=null && !author.isEmpty()){
             List<Author> authorList = authorService.getAll(author);
             List<AuthorBook> authorBooks = new ArrayList<AuthorBook>();
             for(Author a:authorList){
                 authorBooks.addAll(authorBookService.findAllByAuthorId(a.getId()));
             }
             for(AuthorBook ab:authorBooks){
-                bookList.add(ab.getBook());
+                tempBookAuthorList.add(ab.getBook());
             }
+            bookList = tempBookAuthorList;
         }
-        
+
+        if((title!=null && !title.isEmpty()) && (author!=null && !author.isEmpty())){
+            System.out.println(tempBookList);
+            System.out.println(tempBookAuthorList);
+            Set<Book> bookSet = tempBookList.stream()
+            .distinct()
+            .filter(tempBookAuthorList::contains)
+            .collect(Collectors.toSet());
+            bookList = new ArrayList<>(bookSet);
+        }
+
         if(bookList != null){
             if(offset!=null && limit!=null){
                 Pagination pagination = new Pagination();
