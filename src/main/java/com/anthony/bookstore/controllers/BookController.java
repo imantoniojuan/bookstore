@@ -219,8 +219,6 @@ public class BookController extends BaseController{
         }
 
         if((title!=null && !title.isEmpty()) && (author!=null && !author.isEmpty())){
-            System.out.println(tempBookList);
-            System.out.println(tempBookAuthorList);
             Set<Book> bookSet = tempBookList.stream()
             .distinct()
             .filter(tempBookAuthorList::contains)
